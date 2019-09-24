@@ -12,7 +12,7 @@ public class Position {
 	public double longitude;	// The longitude of the position
 	
 	/**
-	   * This constructor is used to initiate Position instance with provided coordinate.
+	   * This constructor is used to initiate Position instance with provided position.
 	   * 
 	   * @param latitude The latitude of the initial position
 	   * @param longitude  The longitude of the initial position
@@ -66,7 +66,7 @@ public class Position {
 	}
 	
 	/**
-	   * This method is used to generate a new Position instance with a given direction.
+	   * This method is used to generate a new Position instance with position of a direction.
 	   * 
 	   * @param direction The new positon's direction of current position
 	   * @return nxtPos The instance of next position
@@ -160,11 +160,7 @@ public class Position {
 		}
 	}
 
-	/**
-	   * Check whether the current coordinate is within the play area
-	   * 
-	   * @return If it's in the area, return true, otherwise return false.
-	   */
+	//TODO Adding change play area function
 	public boolean inPlayArea() {
 		if (latitude >= 55.946233d) {
 			return false;
@@ -181,13 +177,7 @@ public class Position {
 		return true;
 	}
 	
-	/**
-	   * Change the current coordinate of this instance to one of 16 directions
-	   * 
-	   * @param direction  The direction of where to go
-	   */
 	protected void go(Direction direction) {
-		// Use nextPosition method to calculate the new coordinate。
 		Position nxtPos = nextPosition(direction);
 		latitude = nxtPos.latitude;
 		longitude = nxtPos.longitude;

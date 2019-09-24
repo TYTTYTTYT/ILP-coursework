@@ -1,51 +1,31 @@
 package uk.ac.ed.inf.powergrab;
 
 /**
-* The Position class used to indicate position on GeoMaps.
+* The Position class used to indicate position on geomaps
 *
 * @author  Tai Yintao
-* @version 0.1
+* @version 1.0
 * @since   2019-09-24
 */
 public class Position {
-	public double latitude;		// The latitude of the position
-	public double longitude;	// The longitude of the position
-	
-	/**
-	   * This constructor is used to initiate Position instance with provided coordinate.
-	   * 
-	   * @param latitude The latitude of the initial position
-	   * @param longitude  The longitude of the initial position
-	   */
+	public double latitude;
+	public double longitude;
+		
 	public Position(double latitude, double longitude) {
 		this.latitude = latitude;
 		this.longitude = longitude;
 	}
 	
-	/**
-	   * This constructor is used to initiate Position instance without provided position.
-	   * 
-	   */
 	public Position() {
 		latitude = 0;
 		longitude = 0;
 	}
 	
-	
-	/**
-	   * This constructor is used to initiate Position instance with another
-	   * Position instance.
-	   * 
-	   * @param copyFrom The another instance
-	   */
 	public Position(Position copyFrom) {
 		latitude = copyFrom.latitude;
 		longitude = copyFrom.longitude;
 	}
 	
-	/* This static class calculate movement length of all directions first, used to calculate
-	 * next position.
-	 */
 	static class Movement{
 		static private double[] N = {0.0003d, 0d};
 		static private double[] NNE = {Math.sin(3.0d / 8 * Math.PI) * 0.0003d, Math.cos(3.0d / 8 * Math.PI) * 0.0003d};
@@ -65,17 +45,10 @@ public class Position {
 		static private double[] NNW = {Math.sin(5.0d / 8 * Math.PI) * 0.0003d, Math.cos(5.0d / 8 * Math.PI) * 0.0003d};
 	}
 	
-	/**
-	   * This method is used to generate a new Position instance with a given direction.
-	   * 
-	   * @param direction The new positon's direction of current position
-	   * @return nxtPos The instance of next position
-	   */
 	public Position nextPosition(Direction direction) {
 		Position nxtPos = new Position();
 		switch(direction) {
 		case N: {
-			// Change the latitude and longitude with movement length in Movement class
 			nxtPos.latitude = latitude + Movement.N[0];
 			nxtPos.longitude = longitude + Movement.N[1];
 			return nxtPos;
@@ -160,11 +133,7 @@ public class Position {
 		}
 	}
 
-	/**
-	   * Check whether the current coordinate is within the play area
-	   * 
-	   * @return If it's in the area, return true, otherwise return false.
-	   */
+	//TODO Adding change play area function
 	public boolean inPlayArea() {
 		if (latitude >= 55.946233d) {
 			return false;
@@ -181,13 +150,7 @@ public class Position {
 		return true;
 	}
 	
-	/**
-	   * Change the current coordinate of this instance to one of 16 directions
-	   * 
-	   * @param direction  The direction of where to go
-	   */
 	protected void go(Direction direction) {
-		// Use nextPosition method to calculate the new coordinate。
 		Position nxtPos = nextPosition(direction);
 		latitude = nxtPos.latitude;
 		longitude = nxtPos.longitude;
