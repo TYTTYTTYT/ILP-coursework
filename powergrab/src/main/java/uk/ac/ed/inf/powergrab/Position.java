@@ -1,5 +1,4 @@
 package uk.ac.ed.inf.powergrab;
-
 /**
 * The Position class used to indicate position on GeoMaps.
 *
