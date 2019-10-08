@@ -49,6 +49,7 @@ public class Position {
 		static private double[] N = {0.0003d, 0d};
 		static private double[] NNE = {Math.sin(3.0d / 8 * Math.PI) * 0.0003d, Math.cos(3.0d / 8 * Math.PI) * 0.0003d};
 		static private double[] NE = {Math.sin(2.0d / 8 * Math.PI) * 0.0003d, Math.cos(2.0d / 8 * Math.PI) * 0.0003d};
+		//TODO Add method to limit in possible latitude and longitude.
 		static private double[] ENE = {Math.sin(1.0d / 8 * Math.PI) * 0.0003d, Math.cos(1.0d / 8 * Math.PI) * 0.0003d};
 		static private double[] E = {0, 0.0003d};
 		static private double[] ESE = {Math.sin(- 1.0d / 8 * Math.PI) * 0.0003d, Math.cos(- 1.0d / 8 * Math.PI) * 0.0003d};
@@ -185,10 +186,11 @@ public class Position {
 	   * 
 	   * @param direction  The direction of where to go
 	   */
-	protected void go(Direction direction) {
+	protected Position go(Direction direction) {
 		// Use nextPosition method to calculate the new coordinate。
 		Position nxtPos = nextPosition(direction);
 		latitude = nxtPos.latitude;
 		longitude = nxtPos.longitude;
+		return nxtPos;
 	}
 }

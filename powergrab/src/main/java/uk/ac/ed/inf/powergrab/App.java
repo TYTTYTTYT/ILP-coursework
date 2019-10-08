@@ -89,6 +89,26 @@ public class App
         System.out.println(f.getProperty("coins").getAsFloat());
         System.out.println(f.getProperty("power").getAsFloat());
         
+        Position start = new Position(p.latitude(), p.longitude());
+        LineDrawer ld = new LineDrawer(fc);
+        ld.addNextPoint(start);
+        ld.addNextPoint(start.go(Direction.ESE));
+        ld.addNextPoint(start.go(Direction.NE));
+        ld.addNextPoint(start.go(Direction.ESE));
+        ld.addNextPoint(start.go(Direction.ESE));
+        ld.addNextPoint(start.go(Direction.ESE));
+        ld.addNextPoint(start.go(Direction.ESE));
+        ld.addNextPoint(start.go(Direction.ESE));
+        ld.addNextPoint(start.go(Direction.ESE));
+        ld.addNextPoint(start.go(Direction.ESE));
+        ld.addNextPoint(start.go(Direction.ESE));
+        for (int i = 0; i < 220; i++) {
+        	ld.addNextPoint(start.go(Direction.ENE));
+        }
+        
+        FeatureCollection lineMap = ld.mapWithLines();
+        System.out.print(lineMap.toJson());
+        
                 
         
 //        Double[] nums = {Double(123.123123), Double(-123.23132)};
