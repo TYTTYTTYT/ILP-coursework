@@ -1,5 +1,6 @@
 package uk.ac.ed.inf.powergrab;
 
+
 /**
 * The Direction class stores 16 direction from compass, used to indicate the direction 
 * in Position class

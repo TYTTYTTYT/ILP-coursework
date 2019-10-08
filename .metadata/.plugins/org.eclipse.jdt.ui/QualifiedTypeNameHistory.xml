@@ -1,4 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <qualifiedTypeNameHistroy>
 <fullyQualifiedTypeName name="uk.ac.ed.inf.powergrab.Position.Movement"/>
+<fullyQualifiedTypeName name="java.net.URL"/>
+<fullyQualifiedTypeName name="java.net.HttpURLConnection"/>
+<fullyQualifiedTypeName name="com.mapbox.geojson.Feature"/>
+<fullyQualifiedTypeName name="com.mapbox.geojson.Geometry"/>
+<fullyQualifiedTypeName name="com.mapbox.geojson.Point"/>
+<fullyQualifiedTypeName name="java.io.InputStream"/>
+<fullyQualifiedTypeName name="java.util.List"/>
+<fullyQualifiedTypeName name="com.mapbox.geojson.FeatureCollection"/>
 </qualifiedTypeNameHistroy>

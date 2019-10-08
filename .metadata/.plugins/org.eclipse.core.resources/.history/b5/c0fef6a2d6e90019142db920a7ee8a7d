@@ -1,0 +1,14 @@
+package uk.ac.ed.inf.powergrab;
+
+import java.util.List;
+
+import com.mapbox.geojson.Feature;
+import com.mapbox.geojson.FeatureCollection;
+import com.mapbox.geojson.Geometry;
+import com.mapbox.geojson.Point;
+
+public class LineDrawer {
+	double[][] lineTrace;
+	
+	public LineDrawer(double longitude, double latitude)
+}
