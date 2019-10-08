@@ -40,7 +40,7 @@ public class App
         A.go(Direction.NNE);
         System.out.println(A.latitude);
         
-        String mapString = "http://homepages.inf.ed.ac.uk/stg/powergrab/2019/01/01/powergrabmap.geojson";
+        String mapString = "http://homepages.inf.ed.ac.uk/stg/powergrab/2019/01/15/powergrabmap.geojson";
         URL mapURL = null;
         
         try {
@@ -106,13 +106,18 @@ public class App
         	ld.addNextPoint(start.go(Direction.ENE));
         }
         
-        FeatureCollection lineMap = ld.mapWithLines();
-        System.out.print(lineMap.toJson());
+        Map map = new Map(fc);
+        LineDrawer lD = new LineDrawer(fc);
+
+        Stateless drone = new Stateless(new Position(55.94404781601724, -3.1917158579021225), 123L, map, lD);
+        while (drone.hasNext()) {
+        	drone.goNextPosition();
+        }
         
+        System.out.println(lD.mapWithLines().toJson());
+        System.out.println(drone.coins);
+        System.out.println(drone.power);
                 
-        
-//        Double[] nums = {Double(123.123123), Double(-123.23132)};
-//        System.out.println(nums[1]);
         
     }
     

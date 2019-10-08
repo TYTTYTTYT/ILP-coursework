@@ -1,5 +1,6 @@
 package uk.ac.ed.inf.powergrab;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.mapbox.geojson.Feature;
@@ -11,11 +12,13 @@ public class Map {
 	private double[][] coordinates;
 	private double[] coins;
 	private double[] power;
+	private List<Charger> chargers;
 	
 	{
 		coordinates = new double[50][2];
 		coins = new double[50];
 		power = new double[50];
+		chargers = new ArrayList<Charger>();
 	}
 	
 	public Map(FeatureCollection featureMap) {
@@ -30,6 +33,7 @@ public class Map {
 			coordinates[i][1] = currentPoint.longitude();
 			coins[i] = currentFeature.getProperty("coins").getAsDouble();
 			power[i] = currentFeature.getProperty("power").getAsDouble();
+			chargers.add(new Charger(currentPoint.latitude(), currentPoint.longitude(), coins[i], power[i]));
 		}
 	}
 	
@@ -44,8 +48,7 @@ public class Map {
 				index = i;
 			}
 		}
-		Charger charger = new Charger(coordinates[index][0], coordinates[index][1], coins[index], power[index]);
-		return charger;
+		return chargers.get(index);
 	}
 	
 	private double calDistance(Position pos1, Position pos2) {

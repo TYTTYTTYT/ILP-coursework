@@ -14,9 +14,9 @@ public class LineDrawer {
 	static private String jsonTail = "]}}";
 	
 	{
-		lineTrace = new double[250][2];
+		lineTrace = new double[5000][2];
 		tracePointer = 0;
-		for (int i = 0; i < 250; i ++) {
+		for (int i = 0; i < 500; i ++) {
 			lineTrace[i][0] = -100;
 			lineTrace[i][1] = -100;
 		}
@@ -44,7 +44,7 @@ public class LineDrawer {
 		return map;
 	}
 	
-	public String genTraceJson() {
+	private String genTraceJson() {
 		String traceJson = new String();
 		for (int i = 0; i < tracePointer; i++) {
 			traceJson = traceJson + "[ " + Double.toString(lineTrace[i][1]) + ", " + Double.toString(lineTrace[i][0]) + " ]";
