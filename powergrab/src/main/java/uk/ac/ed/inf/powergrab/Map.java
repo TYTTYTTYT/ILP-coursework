@@ -1,5 +1,10 @@
 package uk.ac.ed.inf.powergrab;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,8 +18,10 @@ public class Map {
 	private double[] coins;
 	private double[] power;
 	private List<Charger> chargers;
+	FeatureCollection rawFeatures;
 	
 	{
+		rawFeatures = null;
 		coordinates = new double[50][2];
 		coins = new double[50];
 		power = new double[50];
@@ -22,19 +29,75 @@ public class Map {
 	}
 	
 	public Map(FeatureCollection featureMap) {
-		List<Feature> features = featureMap.features();
-		Feature currentFeature = null;
-		Point currentPoint = null;
-		
-		for (int i = 0; i < 50; i ++) {
-			currentFeature = features.get(i);
-			currentPoint = (Point) currentFeature.geometry();
-			coordinates[i][0] = currentPoint.latitude();
-			coordinates[i][1] = currentPoint.longitude();
-			coins[i] = currentFeature.getProperty("coins").getAsDouble();
-			power[i] = currentFeature.getProperty("power").getAsDouble();
-			chargers.add(new Charger(currentPoint.latitude(), currentPoint.longitude(), coins[i], power[i]));
+		fromFeatures(featureMap);
+	}
+	
+	public Map(int year, int mounth, int day) {
+		String yearS = String.valueOf(year);
+		String mounthS = String.valueOf(mounth);
+		String dayS = String.valueOf(day);
+		if (day < 10) {
+			dayS = "0" + dayS;
 		}
+		if (mounth < 10) {
+			mounthS = "0" + mounthS;
+		}
+        String mapString = "http://homepages.inf.ed.ac.uk/stg/powergrab/" +
+        					yearS + "/" +
+        					mounthS + "/" +
+        					dayS + "/" +
+        					"powergrabmap.geojson";
+        
+        String mapSource = null;
+        URL mapURL;
+        try {
+			mapURL = new URL(mapString);
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+			System.err.println("Not a well-formed URL: " + e.getMessage());
+			return;
+		}
+
+        
+        try {
+        	HttpURLConnection conn = (HttpURLConnection) mapURL.openConnection();
+			conn.setReadTimeout(10000);
+			conn.setConnectTimeout(15000); 
+			conn.setRequestMethod("GET");
+			conn.setDoInput(true);
+			conn.connect();
+			InputStream buffer = conn.getInputStream();
+			mapSource = reader(buffer);
+//			in = new Scanner(buffer);
+//			mapSource = in.next();
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.err.println("**********************************************************************");
+			System.err.println("Network problem occurred, can not download map: " + e.getMessage());
+			System.err.println("**********************************************************************");
+			return;
+		}
+        
+        FeatureCollection fc = FeatureCollection.fromJson(mapSource);
+        fromFeatures(fc);
+
+	}
+	
+	Charger nearestPositiveCharger(Position pos) {
+		double distance = 300;
+		double curDistance = 0;
+		int index = -1;
+		for (int i = 0; i < 50; i ++) {
+			if (power[i] > 0 && coins[i] > 0) {
+				curDistance = calDistance(pos, new Position(coordinates[i][0], coordinates[i][1]));
+			} else continue;
+			if (curDistance < distance) {
+				distance = curDistance;
+				index = i;
+			}
+		}
+		if (index == -1) return null;
+		return chargers.get(index);
 	}
 	
 	public Charger nearestCharger(Position pos) {
@@ -62,5 +125,38 @@ public class Map {
 		if (distance <= 0.00025) return nearest;
 		else return null;
 	}
+	
+    private static String reader(InputStream in) {
+    	byte current;
+    	String result = new String();
+    	while(true) {
+    		try {
+				current = (byte) in.read();
+			} catch (IOException e) {
+				e.printStackTrace();
+				return result;
+			}
+    		if (current == -1) return result;
+    		result += (char) current;
+    	}
+    }
+    
+    private void fromFeatures(FeatureCollection featureMap) {
+    	rawFeatures = featureMap;
+		List<Feature> features = featureMap.features();
+		Feature currentFeature = null;
+		Point currentPoint = null;
+		
+		for (int i = 0; i < 50; i ++) {
+			currentFeature = features.get(i);
+			currentPoint = (Point) currentFeature.geometry();
+			coordinates[i][0] = currentPoint.latitude();
+			coordinates[i][1] = currentPoint.longitude();
+			coins[i] = currentFeature.getProperty("coins").getAsDouble();
+			power[i] = currentFeature.getProperty("power").getAsDouble();
+			
+			chargers.add(new Charger(currentPoint.latitude(), currentPoint.longitude(), coins[i], power[i]));
+		}
+    }
 	
 }

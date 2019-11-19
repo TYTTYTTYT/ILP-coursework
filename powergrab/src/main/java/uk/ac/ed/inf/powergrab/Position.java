@@ -1,15 +1,31 @@
 package uk.ac.ed.inf.powergrab;
+
+import com.mapbox.geojson.Point;
 /**
 * The Position class used to indicate position on GeoMaps.
 *
 * @author  Tai Yintao
-* @version 0.1
+* @version 0.2
 * @since   2019-09-24
 */
 public class Position {
 	public double latitude;		// The latitude of the position
 	public double longitude;	// The longitude of the position
 	
+	static private double northLimit;
+	static private double southLimit;
+	static private double westLimit;
+	static private double eastLimit;
+	
+	// Static initialization block, used to initialize default playarea.
+	static {
+		northLimit = 55.946233d;
+		southLimit = 55.942617d;
+		westLimit = -3.192473d;
+		eastLimit = -3.184319d;
+	}
+	
+		
 	/**
 	   * This constructor is used to initiate Position instance with provided coordinate.
 	   * 
@@ -19,6 +35,17 @@ public class Position {
 	public Position(double latitude, double longitude) {
 		this.latitude = latitude;
 		this.longitude = longitude;
+	}
+
+	/**
+	   * This constructor is used to initiate Position instance with provided Geojson
+	   * Point instance.
+	   * 
+	   * @param a Geojson Point instance stores latitude and longitude
+	   */
+	public Position(Point point) {
+		this.latitude = point.latitude();
+		this.latitude = point.longitude();
 	}
 	
 	/**
@@ -49,7 +76,6 @@ public class Position {
 		static private double[] N = {0.0003d, 0d};
 		static private double[] NNE = {Math.sin(3.0d / 8 * Math.PI) * 0.0003d, Math.cos(3.0d / 8 * Math.PI) * 0.0003d};
 		static private double[] NE = {Math.sin(2.0d / 8 * Math.PI) * 0.0003d, Math.cos(2.0d / 8 * Math.PI) * 0.0003d};
-		//TODO Add method to limit in possible latitude and longitude.
 		static private double[] ENE = {Math.sin(1.0d / 8 * Math.PI) * 0.0003d, Math.cos(1.0d / 8 * Math.PI) * 0.0003d};
 		static private double[] E = {0, 0.0003d};
 		static private double[] ESE = {Math.sin(- 1.0d / 8 * Math.PI) * 0.0003d, Math.cos(- 1.0d / 8 * Math.PI) * 0.0003d};
@@ -66,7 +92,8 @@ public class Position {
 	}
 	
 	/**
-	   * This method is used to generate a new Position instance with a given direction.
+	   * This method is used to generate a new Position instance with a given direction, 
+	   * and without change the coordinate of itself.
 	   * 
 	   * @param direction The new positon's direction of current position
 	   * @return nxtPos The instance of next position
@@ -159,6 +186,22 @@ public class Position {
 			return nxtPos;
 		}
 	}
+	
+	/**
+	   * This method is used to set play area. Do not use it if game is hold
+	   * in default area.
+	   * 
+	   * @param north The north boundary of play area
+	   * @param south The south boundary of play area
+	   * @param east The east boundary of play area
+	   * @param west The west boundary of play area
+	   */
+	static public void setPlayArea(double north, double south, double east, double west) {
+		northLimit = north;
+		southLimit = south;
+		eastLimit = east;
+		westLimit = west;
+	}
 
 	/**
 	   * Check whether the current coordinate is within the play area
@@ -166,16 +209,16 @@ public class Position {
 	   * @return If it's in the area, return true, otherwise return false.
 	   */
 	public boolean inPlayArea() {
-		if (latitude >= 55.946233d) {
+		if (latitude >= northLimit) {
 			return false;
 		}
-		if (latitude <= 55.942617d) {
+		if (latitude <= southLimit) {
 			return false;
 		}
-		if (longitude >= -3.184319d) {
+		if (longitude >= eastLimit) {
 			return false;
 		}
-		if (longitude <= -3.192473d) {
+		if (longitude <= westLimit) {
 			return false;
 		}
 		return true;
@@ -186,11 +229,19 @@ public class Position {
 	   * 
 	   * @param direction  The direction of where to go
 	   */
-	protected Position go(Direction direction) {
+	public Position go(Direction direction) {
 		// Use nextPosition method to calculate the new coordinate。
 		Position nxtPos = nextPosition(direction);
 		latitude = nxtPos.latitude;
 		longitude = nxtPos.longitude;
 		return nxtPos;
+	}
+	
+	public double angle(Position pos) {
+		double cos = (pos.latitude - latitude) / Math.sqrt(Math.pow(pos.latitude - latitude, 2) + Math.pow(pos.longitude - longitude, 2));
+		double acos = Math.acos(cos);
+		if (longitude > pos.longitude)
+			acos = - acos;
+		return acos;
 	}
 }

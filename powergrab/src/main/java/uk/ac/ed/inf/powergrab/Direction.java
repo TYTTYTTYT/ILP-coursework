@@ -11,5 +11,14 @@ package uk.ac.ed.inf.powergrab;
 */
 public enum Direction {
 	// 16 directions
-	N, NNE, NE, ENE, E, ESE, SE, SSE, S, SSW, SW, WSW, W, WNW, NW, NNW
+	N, NNE, NE, ENE, E, ESE, SE, SSE, S, SSW, SW, WSW, W, WNW, NW, NNW;
+	
+	static public Direction angleToDirection(double angle) {
+		angle = angle % (Math.PI * 2);
+		int index = 0;
+		if (angle < 0) angle = angle + 2 * Math.PI;
+		index = (int)(angle / (Math.PI / 8) + 0.5);
+		return Direction.values()[index];
+	}
+	
 }

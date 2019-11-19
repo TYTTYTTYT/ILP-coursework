@@ -18,121 +18,32 @@ import com.mapbox.geojson.Point;
  */
 public class App 
 {
-    public static void main(String[] fff ) {
-    	Direction drct;
-    	drct = Direction.N;
+    public static void main(String[] fff ) {;
+
+        for (int y = 2019; y <= 2020; y++) {
+        	for (int m = 1; m <= 12; m++) {
+        		for (int d = 1; d <= 28; d++) {
+        			Map map = new Map(y, m, d);
+        			LineDrawer ld = new LineDrawer(map.rawFeatures);
+        			Stateless drone = new Statefull(new Position(55.94404781601724, -3.1917158579021225), 123L, map, ld);
+        			while (drone.hasNext()) {
+        	        	drone.goNextPosition();
+        	        }
+        			System.out.println(ld.mapWithLines().toJson());
+        			System.out.println(drone.coins);
+        	        System.out.println(drone.power);
+        		}
+        	}
+        }
+    
     	
-    	switch (drct) {
-    	case N:
-    		System.out.println("north");
-    		break;
-    	case SSE:
-    		System.out.println("South South East");
-    	default:
-    		break;
-    	}
-        System.out.println( "Hello World!" );
-        Position A = new Position(10, 10);
-        Position B = new Position(123, 123);
-        B.latitude = 123;
+        System.out.println("finished");
+        System.out.println(Direction.angleToDirection(Math.PI / 16 - 0.0001));    
+        Position pos1 = new Position(400, -321);
+        Position pos2 = new Position(0, 0);
         
-        System.out.println(A.latitude);
-        A.go(Direction.NNE);
-        System.out.println(A.latitude);
-        
-        String mapString = "http://homepages.inf.ed.ac.uk/stg/powergrab/2019/01/15/powergrabmap.geojson";
-        URL mapURL = null;
-        
-        try {
-			mapURL = new URL(mapString);
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-			System.err.println("Not a well-formed URL: " + e.getMessage());
-		}
-        HttpURLConnection conn = null;
-        String mapSource = null;
-//        Scanner in = null;
-
-        try {
-			conn = (HttpURLConnection)mapURL.openConnection();
-			conn.setReadTimeout(10000);
-			conn.setConnectTimeout(15000); 
-			conn.setRequestMethod("GET");
-			conn.setDoInput(true);
-			conn.connect();
-			InputStream buffer = conn.getInputStream();
-			mapSource = reader(buffer);
-//			in = new Scanner(buffer);
-//			mapSource = in.next();
-		} catch (IOException e) {
-			e.printStackTrace();
-			System.err.println("**********************************************************************");
-			System.err.println("Network problem occurred, can not download map: " + e.getMessage());
-			System.err.println("**********************************************************************");
-		}
-        
-        
-        if (mapSource != null) System.out.println(mapSource.length());
-        else return;
-        System.out.println(-1);
-        FeatureCollection fc = FeatureCollection.fromJson(mapSource);
-        System.out.println(0);
-        List<Feature> features = fc.features();
-        System.out.println(1);
-        Feature f = features.get(0);
-        Geometry g = f.geometry();
-        System.out.println(3);
-        Point p = (Point) g;
-        System.out.println(4);
-        System.out.println(p.coordinates().toString());
-        System.out.println(mapSource.length());
-        System.out.println(f.getProperty("coins").getAsFloat());
-        System.out.println(f.getProperty("power").getAsFloat());
-        
-        Position start = new Position(p.latitude(), p.longitude());
-        LineDrawer ld = new LineDrawer(fc);
-        ld.addNextPoint(start);
-        ld.addNextPoint(start.go(Direction.ESE));
-        ld.addNextPoint(start.go(Direction.NE));
-        ld.addNextPoint(start.go(Direction.ESE));
-        ld.addNextPoint(start.go(Direction.ESE));
-        ld.addNextPoint(start.go(Direction.ESE));
-        ld.addNextPoint(start.go(Direction.ESE));
-        ld.addNextPoint(start.go(Direction.ESE));
-        ld.addNextPoint(start.go(Direction.ESE));
-        ld.addNextPoint(start.go(Direction.ESE));
-        ld.addNextPoint(start.go(Direction.ESE));
-        for (int i = 0; i < 220; i++) {
-        	ld.addNextPoint(start.go(Direction.ENE));
-        }
-        
-        Map map = new Map(fc);
-        LineDrawer lD = new LineDrawer(fc);
-
-        Stateless drone = new Stateless(new Position(55.94404781601724, -3.1917158579021225), 123L, map, lD);
-        while (drone.hasNext()) {
-        	drone.goNextPosition();
-        }
-        
-        System.out.println(lD.mapWithLines().toJson());
-        System.out.println(drone.coins);
-        System.out.println(drone.power);
-                
-        
+        double angle = pos2.angle(pos1);
+        System.out.println(Direction.angleToDirection(angle));
     }
     
-    private static String reader(InputStream in) {
-    	byte current;
-    	String result = new String();
-    	while(true) {
-    		try {
-				current = (byte) in.read();
-			} catch (IOException e) {
-				e.printStackTrace();
-				return result;
-			}
-    		if (current == -1) return result;
-    		result += (char) current;
-    	}
-    }
 }
