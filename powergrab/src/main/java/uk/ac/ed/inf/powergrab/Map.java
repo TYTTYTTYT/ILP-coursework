@@ -15,16 +15,15 @@ import com.mapbox.geojson.Point;
 
 public class Map {
 	private double[][] coordinates;
-	private double[] coins;
-	private double[] power;
+	private double totalPositiveCoins;
+	private double totalPositivePower;
+	
 	private List<Charger> chargers;
 	FeatureCollection rawFeatures;
 	
 	{
 		rawFeatures = null;
 		coordinates = new double[50][2];
-		coins = new double[50];
-		power = new double[50];
 		chargers = new ArrayList<Charger>();
 	}
 	
@@ -88,7 +87,7 @@ public class Map {
 		double curDistance = 0;
 		int index = -1;
 		for (int i = 0; i < 50; i ++) {
-			if (power[i] > 0 && coins[i] > 0) {
+			if (chargers.get(i).power > 0 && chargers.get(i).power > 0) {
 				curDistance = calDistance(pos, new Position(coordinates[i][0], coordinates[i][1]));
 			} else continue;
 			if (curDistance < distance) {
@@ -114,7 +113,7 @@ public class Map {
 		return chargers.get(index);
 	}
 	
-	private double calDistance(Position pos1, Position pos2) {
+	double calDistance(Position pos1, Position pos2) {
 		double distance = Math.sqrt(Math.pow(pos1.latitude - pos2.latitude, 2) + Math.pow(pos1.longitude - pos2.longitude, 2));
 		return distance;
 	}
@@ -142,6 +141,8 @@ public class Map {
     }
     
     private void fromFeatures(FeatureCollection featureMap) {
+    	double coins;
+    	double power;
     	rawFeatures = featureMap;
 		List<Feature> features = featureMap.features();
 		Feature currentFeature = null;
@@ -152,11 +153,21 @@ public class Map {
 			currentPoint = (Point) currentFeature.geometry();
 			coordinates[i][0] = currentPoint.latitude();
 			coordinates[i][1] = currentPoint.longitude();
-			coins[i] = currentFeature.getProperty("coins").getAsDouble();
-			power[i] = currentFeature.getProperty("power").getAsDouble();
+			coins = currentFeature.getProperty("coins").getAsDouble();
+			power = currentFeature.getProperty("power").getAsDouble();
 			
-			chargers.add(new Charger(currentPoint.latitude(), currentPoint.longitude(), coins[i], power[i]));
+			if (coins > 0) totalPositiveCoins += coins;
+			if (power > 0) totalPositivePower += power;
+			
+			chargers.add(new Charger(currentPoint.latitude(), currentPoint.longitude(), coins, power));
 		}
+    }
+    
+    boolean noCoinsLeft() {
+    	for (int i = 0; i < 50; i++) {
+    		if (chargers.get(i).coins > 0) return false;
+    	}
+    	return true;
     }
 	
 }

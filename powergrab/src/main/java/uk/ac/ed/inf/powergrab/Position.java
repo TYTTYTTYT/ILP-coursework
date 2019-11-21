@@ -244,4 +244,9 @@ public class Position {
 			acos = - acos;
 		return acos;
 	}
+	
+	public boolean same(Position pos) {
+		if (pos.latitude == latitude && pos.longitude == longitude) return true;
+		else return false;
+	}
 }

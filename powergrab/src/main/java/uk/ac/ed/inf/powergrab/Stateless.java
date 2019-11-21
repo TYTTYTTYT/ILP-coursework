@@ -13,8 +13,26 @@ public class Stateless extends Drone {
 	
 	@Override
 	Position goNextPosition() {
+		// TODO random go to hurtless position;
 		if (!hasNext()) return null;
 		Position nextPosition = findNextPosition();
+		if (nextPosition.same(lastPosition)) {
+			Direction direction;
+			List<Direction> directions = new LinkedList<Direction>();
+			int index = 0;
+			for(Direction d : Direction.values()) {
+				directions.add(d);
+			}
+			while(!directions.isEmpty()) {
+				index = randomGenerator.nextInt(directions.size());
+				direction = directions.get(index);
+				directions.remove(index);
+				nextPosition.go(direction);
+				if (nextPosition.inPlayArea())
+					break;
+			}
+		}
+		lastPosition = myPosition;
 		myPosition = nextPosition;
 		stepsLeft--;
 		power -= 1.25;

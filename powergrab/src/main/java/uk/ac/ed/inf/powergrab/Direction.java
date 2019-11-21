@@ -18,6 +18,7 @@ public enum Direction {
 		int index = 0;
 		if (angle < 0) angle = angle + 2 * Math.PI;
 		index = (int)(angle / (Math.PI / 8) + 0.5);
+		if (index == 16) index = 0;
 		return Direction.values()[index];
 	}
 	

@@ -22,12 +22,14 @@ public abstract class Drone {
 	//TODO use method to get coins and power
 	Map map;
 	LineDrawer tracer;
+	Position lastPosition;
 	
 	public Drone(Position startPosition, long seed, Map map, LineDrawer tracer) {
 		this.map = map;
-		myPosition = new Position(startPosition);
-		randomGenerator = new Random(seed);
 		this.tracer = tracer;
+		myPosition = new Position(startPosition);
+		lastPosition = myPosition;
+		randomGenerator = new Random(seed);
 		updatePowerAndCoinsAndTrace();
 	}
 	
@@ -40,8 +42,6 @@ public abstract class Drone {
 			charger.coins = 0;
 			charger.power = 0;
 			if (coins < 0) coins = 0;
-			tracer.addNextPoint(charger.position);
-			tracer.addNextPoint(myPosition);
 		}
 	}
 	
@@ -52,7 +52,6 @@ public abstract class Drone {
 	boolean hasNext() {
 		if (stepsLeft > 0 && power >= 1.25) return true;
 		else {
-			System.out.println(String.valueOf(250 - stepsLeft) + " steps in totall");
 			return false;
 		}
 	}
@@ -62,6 +61,13 @@ public abstract class Drone {
 		if (charger == null) return false;
 		else if (charger.power >= 0) return false;
 		return true;
+	}
+	
+	boolean nextPositive(Position nextPosition) {
+		Charger charger = map.availableCharger(nextPosition);
+		if (charger == null) return false;
+		if (charger.power > 0 && charger.coins > 0) return true;
+		else return false;
 	}
 	
 }
