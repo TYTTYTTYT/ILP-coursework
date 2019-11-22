@@ -1,5 +1,10 @@
 package uk.ac.ed.inf.powergrab;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
 * The Direction class stores 16 direction from compass, used to indicate the direction 
@@ -22,4 +27,9 @@ public enum Direction {
 		return Direction.values()[index];
 	}
 	
+	static public Iterator<Direction> randomDirections() {
+		List<Direction> directions = new LinkedList<Direction>(Arrays.asList(Direction.values()));
+		Collections.shuffle(directions);
+		return directions.iterator();
+	}
 }

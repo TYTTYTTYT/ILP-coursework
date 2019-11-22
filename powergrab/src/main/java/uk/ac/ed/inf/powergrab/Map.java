@@ -118,7 +118,7 @@ public class Map {
 		return distance;
 	}
 	
-	public Charger availableCharger(Position pos) {
+	public Charger connectedCharger(Position pos) {
 		Charger nearest = nearestCharger(pos);
 		double distance = calDistance(nearest.position, pos);
 		if (distance <= 0.00025) return nearest;

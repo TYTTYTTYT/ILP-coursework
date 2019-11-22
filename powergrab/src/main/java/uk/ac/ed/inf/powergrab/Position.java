@@ -25,7 +25,6 @@ public class Position {
 		eastLimit = -3.184319d;
 	}
 	
-		
 	/**
 	   * This constructor is used to initiate Position instance with provided coordinate.
 	   * 

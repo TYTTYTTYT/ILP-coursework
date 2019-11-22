@@ -1,31 +1,24 @@
 package uk.ac.ed.inf.powergrab;
 
+import java.util.Iterator;
+
 public class Statefull extends Stateless {
 	
-	String strategy = "clockwise";
+	private String strategy = "clockwise";
+	private double pointer;
+	private double lastBestAngle;
 
 
 	public Statefull(Position startPosition, long seed, Map map, LineDrawer tracer) {
 		super(startPosition, seed, map, tracer);
 	}
-
-	@Override
-	Position goNextPosition() {
-		if (map.nearestPositiveCharger(myPosition) == null) {
-			lastPosition = myPosition;
-			return super.goNextPosition();
+	
+	private void changeStrategy() {
+		if (strategy == "clockwise") {
+			strategy = "anti-clockwise";
+		} else {
+			strategy = "clockwise";
 		}
-		if (!hasNext()) return null;
-		Position nextPosition = findNextPosition();
-		if (nextPosition.same(lastPosition)) {
-			return super.goNextPosition();
-		}
-		lastPosition = myPosition;
-		myPosition = nextPosition;
-		stepsLeft--;
-		power -= 1.25;
-		updatePowerAndCoinsAndTrace();
-		return nextPosition;
 	}
 
 	@Override
@@ -40,40 +33,26 @@ public class Statefull extends Stateless {
 		double bestAngle = myPosition.angle(nextPositive.position);
 		double angle = bestAngle;
 		
-		for (int i = 0; i < 16; i ++) {
-			if (nextPositive(myPosition.nextPosition(Direction.values()[i])) && myPosition.nextPosition(Direction.values()[i]).inPlayArea())
-				return myPosition.nextPosition(Direction.values()[i]);
-		}
+		nextPosition = super.findNextPosition();
+		if (isPositivePosition(nextPosition) || dangerous(nextPosition))
+			return nextPosition;
 		
-		if (strategy == "clockwise") {
-			for (int i = 0; i < 15; i++) {
-				nextPosition = myPosition.nextPosition(Direction.angleToDirection(angle));
-				if (!nextPosition.inPlayArea() || nextPosition.same(lastPosition)) {
-					strategy = "anti-clockwise";
-					break;
-				}
-				if (dangerous(nextPosition)) {
-					angle += Math.PI / 8;
-				} else return nextPosition;
-				// TODO solve trap
+		
+		
+		while (true) {
+			nextPosition = myPosition.nextPosition(Direction.angleToDirection(angle));
+			if (!nextPosition.inPlayArea()) {
+				changeStrategy();
+				angle = bestAngle;
+				continue;
 			}
-		}
-		
-		angle = bestAngle;
-		if (strategy == "anti-clockwise") {
-			for (int i = 0; i < 15; i++) {
-				nextPosition = myPosition.nextPosition(Direction.angleToDirection(angle));
-				if (!nextPosition.inPlayArea() || nextPosition.same(lastPosition)) {
-					strategy = "clockwise";
-					break;
-				}
-				if (dangerous(nextPosition) || !nextPosition.inPlayArea()) {
+			if (dangerous(nextPosition)) {
+				if (strategy == "clockwise")
 					angle -= Math.PI / 8;
-				} else return nextPosition;
-				// TODO solve trap
-			}
+				else angle += Math.PI / 8;			
+			} else return nextPosition;
 		}
-		return super.findNextPosition();
+
 	}
 
 }

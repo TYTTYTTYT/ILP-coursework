@@ -1,5 +1,8 @@
 package uk.ac.ed.inf.powergrab;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
@@ -12,78 +15,36 @@ public class Stateless extends Drone {
 	}
 	
 	@Override
-	Position goNextPosition() {
-		// TODO random go to hurtless position;
-		if (!hasNext()) return null;
-		Position nextPosition = findNextPosition();
-		if (nextPosition.same(lastPosition)) {
-			Direction direction;
-			List<Direction> directions = new LinkedList<Direction>();
-			int index = 0;
-			for(Direction d : Direction.values()) {
-				directions.add(d);
-			}
-			while(!directions.isEmpty()) {
-				index = randomGenerator.nextInt(directions.size());
-				direction = directions.get(index);
-				directions.remove(index);
-				nextPosition.go(direction);
-				if (nextPosition.inPlayArea())
-					break;
-			}
-		}
-		lastPosition = myPosition;
-		myPosition = nextPosition;
-		stepsLeft--;
-		power -= 1.25;
-		updatePowerAndCoinsAndTrace();
-		return nextPosition;
-	}
-	
-	@Override
 	Position findNextPosition() {
-		Direction direction;
-		int index;
-		Charger nextCharger;
+		Position position;
+		Position nextPosition = null;
 		
-		List<Direction> directions = new LinkedList<Direction>();
-		for(Direction d : Direction.values()) {
-			directions.add(d);
-		}
-		while(!directions.isEmpty()) {
-			index = randomGenerator.nextInt(directions.size());
-			direction = directions.get(index);
-			directions.remove(index);
-			nextCharger = map.availableCharger(myPosition.nextPosition(direction));
-			if (nextCharger != null && nextCharger.power > 0 && myPosition.nextPosition(direction).inPlayArea())
-				return myPosition.nextPosition(direction);
-		}
-		for(Direction d : Direction.values()) {
-			directions.add(d);
-		}
-		while(!directions.isEmpty()) {
-			index = randomGenerator.nextInt(directions.size());
-			direction = directions.get(index);
-			directions.remove(index);
-			nextCharger = map.availableCharger(myPosition.nextPosition(direction));
-			if (nextCharger == null && myPosition.nextPosition(direction).inPlayArea())
-				return myPosition.nextPosition(direction);
-			if (nextCharger != null && nextCharger.power == 0 && myPosition.nextPosition(direction).inPlayArea()) {
-				return myPosition.nextPosition(direction);
+		Iterator<Direction> iterator = Direction.randomDirections();
+		
+		while (iterator.hasNext()) {
+			position = myPosition.nextPosition(iterator.next());
+			if (!position.inPlayArea() || position.same(lastPosition)) {
+				continue;
+			}
+			if (isPositivePosition(position)) {
+				return position;
+			}
+			if (!dangerous(position)) {
+				nextPosition = position;
+				continue;
+			} 
+			if (nextPosition == null) {
+				nextPosition = position;
+				continue;
+			}
+			if (dangerous(position) && dangerous(nextPosition)) {
+				if (map.connectedCharger(nextPosition).coins < map.connectedCharger(position).coins) {
+					nextPosition = position;
+				}
 			}
 		}
-		for(Direction d : Direction.values()) {
-			directions.add(d);
-		}
-		while(!directions.isEmpty()) {
-			index = randomGenerator.nextInt(directions.size());
-			direction = directions.get(index);
-			directions.remove(index);
-			nextCharger = map.availableCharger(myPosition.nextPosition(direction));
-			if (nextCharger.position.inPlayArea())
-				return myPosition.nextPosition(direction);
-		}
-		return null;
+		
+		return nextPosition;
 	}
 	
 }
