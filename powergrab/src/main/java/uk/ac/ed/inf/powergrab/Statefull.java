@@ -1,16 +1,16 @@
 package uk.ac.ed.inf.powergrab;
-
-import java.util.Iterator;
-
+// TODO add method to reset drone, so when drone have bad performance it can begin with different seed
 public class Statefull extends Stateless {
 	
 	private String strategy = "clockwise";
-	private double pointer;
-	private double lastBestAngle;
-
 
 	public Statefull(Position startPosition, long seed, Map map, LineDrawer tracer) {
 		super(startPosition, seed, map, tracer);
+		if (rand.nextBoolean()) {
+			strategy = "clockwise";
+		}else {
+			strategy = "anti-clockwise";
+		}
 	}
 	
 	private void changeStrategy() {
@@ -27,21 +27,15 @@ public class Statefull extends Stateless {
 		Position nextPosition;
 		
 		if (nextPositive == null) {
-			return super.findNextPosition();
+			return lastPosition;
 		}
 		
 		double bestAngle = myPosition.angle(nextPositive.position);
 		double angle = bestAngle;
 		
-		nextPosition = super.findNextPosition();
-		if (isPositivePosition(nextPosition) || dangerous(nextPosition))
-			return nextPosition;
-		
-		
-		
-		while (true) {
+		for (int i = 0; i < 16; i++) {
 			nextPosition = myPosition.nextPosition(Direction.angleToDirection(angle));
-			if (!nextPosition.inPlayArea()) {
+			if (!nextPosition.inPlayArea() || nextPosition.same(lastPosition)) {
 				changeStrategy();
 				angle = bestAngle;
 				continue;
@@ -49,9 +43,11 @@ public class Statefull extends Stateless {
 			if (dangerous(nextPosition)) {
 				if (strategy == "clockwise")
 					angle -= Math.PI / 8;
-				else angle += Math.PI / 8;			
+				else angle += Math.PI / 8;
 			} else return nextPosition;
 		}
+		
+		return super.findNextPosition();
 
 	}
 

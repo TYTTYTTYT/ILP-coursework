@@ -1,11 +1,6 @@
 package uk.ac.ed.inf.powergrab;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Random;
 
 public class Stateless extends Drone {
 	
@@ -19,7 +14,7 @@ public class Stateless extends Drone {
 		Position position;
 		Position nextPosition = null;
 		
-		Iterator<Direction> iterator = Direction.randomDirections();
+		Iterator<Direction> iterator = Direction.randomDirections(rand);
 		
 		while (iterator.hasNext()) {
 			position = myPosition.nextPosition(iterator.next());

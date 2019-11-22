@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Random;
 
 /**
 * The Direction class stores 16 direction from compass, used to indicate the direction 
@@ -27,9 +28,9 @@ public enum Direction {
 		return Direction.values()[index];
 	}
 	
-	static public Iterator<Direction> randomDirections() {
+	static public Iterator<Direction> randomDirections(Random rand) {
 		List<Direction> directions = new LinkedList<Direction>(Arrays.asList(Direction.values()));
-		Collections.shuffle(directions);
+		Collections.shuffle(directions, rand);
 		return directions.iterator();
 	}
 }

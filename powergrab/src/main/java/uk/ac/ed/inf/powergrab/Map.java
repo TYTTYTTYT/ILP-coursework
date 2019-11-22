@@ -15,13 +15,15 @@ import com.mapbox.geojson.Point;
 
 public class Map {
 	private double[][] coordinates;
-	private double totalPositiveCoins;
-	private double totalPositivePower;
+	double totalPositiveCoins;
+	double totalPositivePower;
 	
 	private List<Charger> chargers;
 	FeatureCollection rawFeatures;
 	
 	{
+		totalPositiveCoins = 0;
+		totalPositivePower = 0;
 		rawFeatures = null;
 		coordinates = new double[50][2];
 		chargers = new ArrayList<Charger>();
@@ -161,6 +163,10 @@ public class Map {
 			
 			chargers.add(new Charger(currentPoint.latitude(), currentPoint.longitude(), coins, power));
 		}
+    }
+    
+    void reset() {
+    	fromFeatures(rawFeatures);
     }
     
     boolean noCoinsLeft() {

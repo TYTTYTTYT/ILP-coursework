@@ -13,7 +13,7 @@ public abstract class Drone {
 	//TODO add method to output logs
 	Position myPosition;
 	int stepLeft = 250;
-	Random randomGenerator;
+	Random rand;
 	LineDrawer trace;
 	//TODO Determin if private
 	double coins = 0;
@@ -29,7 +29,7 @@ public abstract class Drone {
 		this.tracer = tracer;
 		myPosition = new Position(startPosition);
 		lastPosition = myPosition;
-		randomGenerator = new Random(seed);
+		rand = new Random(seed);
 		updatePowerAndCoinsAndTrace();
 	}
 	
@@ -43,6 +43,7 @@ public abstract class Drone {
 			charger.power = 0;
 			if (coins < 0) coins = 0;
 			if (power < 0) power = 0;
+			
 		}
 	}
 	
