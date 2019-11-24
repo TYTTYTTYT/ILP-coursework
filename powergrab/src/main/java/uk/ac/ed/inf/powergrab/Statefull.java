@@ -3,9 +3,11 @@ package uk.ac.ed.inf.powergrab;
 public class Statefull extends Stateless {
 	
 	private String strategy = "clockwise";
+	private Position lastPosition;
 
 	public Statefull(Position startPosition, long seed, Map map, LineDrawer tracer) {
 		super(startPosition, seed, map, tracer);
+		lastPosition = new Position(myPosition);
 		if (rand.nextBoolean()) {
 			strategy = "clockwise";
 		}else {
@@ -20,9 +22,20 @@ public class Statefull extends Stateless {
 			strategy = "clockwise";
 		}
 	}
+	
+	@Override
+	Position goNextPosition() {
+		Position pos = new Position(myPosition);
+		super.goNextPosition();
+		lastPosition = pos;
+		return myPosition;
+	}
 
 	@Override
 	Position findNextPosition() {
+		Position statelessNext = super.findNextPosition();
+		if (isPositivePosition(statelessNext) || dangerous(statelessNext)) return statelessNext;
+		
 		Charger nextPositive = map.nearestPositiveCharger(myPosition);
 		Position nextPosition;
 		
@@ -30,10 +43,10 @@ public class Statefull extends Stateless {
 			return lastPosition;
 		}
 		
-		double bestAngle = myPosition.angle(nextPositive.position);
+		double bestAngle = myPosition.angle(nextPositive);
 		double angle = bestAngle;
 		
-		for (int i = 0; i < 16; i++) {
+		for (int i = 0; i < 17; i++) {
 			nextPosition = myPosition.nextPosition(Direction.angleToDirection(angle));
 			if (!nextPosition.inPlayArea() || nextPosition.same(lastPosition)) {
 				changeStrategy();
@@ -47,7 +60,7 @@ public class Statefull extends Stateless {
 			} else return nextPosition;
 		}
 		
-		return super.findNextPosition();
+		return statelessNext;
 
 	}
 

@@ -1,5 +1,7 @@
 package uk.ac.ed.inf.powergrab;
 
+import java.io.IOException;
+
 /**
  * Hello world!
  *
@@ -13,18 +15,17 @@ public class App
 	    for (int y = 2019; y <= 2020; y++) {
 	    	for (int m = 1; m <= 12; m++) {
 	        	for (int d = 1; d <= 31; d++) {
-	        		if (m == 2) {
-	        			if (d == 29 && y == 2019) break;
-	        			if (d == 30 && y == 2020) break;
-	        		}
-	        		if (d == 31) {
-	        			if (m == 4 || m == 6 || m == 9 || m == 11) break;
-	        		}
-	        		if (y == 2020 && m == 12 && d == 31) break;
+	    			Map map = null;
+	    			try {
+	    				map = new Map(y, m, d);
+	    			} catch (IOException e) {
+	    				System.err.println("Map initialization failed, please check the date or network!");
+	    				continue;
+	    			}
+	    			
 	        		allMaps++;
-	        		Map map = new Map(y, m, d);
 	        		LineDrawer ld = new LineDrawer(map.rawFeatures);
-	       			Stateless drone = new Statefull(new Position(55.944425, -3.188396), 1234, map, ld);
+	       			Stateless drone = new Statefull(new Position(55.944425, -3.188396), 333, map, ld);
 	       			while (drone.hasNext()) {
 	       	        	drone.goNextPosition();
 	       	        }
@@ -44,9 +45,16 @@ public class App
 	    System.out.println("cleared maps: " + String.valueOf(clearMaps));
 
 
-//			Map map = new Map(2020, 9, 30);
+//			Map map = null;
+//			try {
+//				map = new Map(2019, 10, 14);
+//			} catch (IOException e) {
+//				System.err.println("Map initialize failed, please check the input date and network!");
+//				e.printStackTrace();
+//			}
+//			
 //			LineDrawer ld = new LineDrawer(map.rawFeatures);
-//			Stateless drone = new Statefull(new Position(55.944425, -3.188396), 213213, map, ld);
+//			Stateless drone = new Statefull(new Position(55.944425, -3.188396), 5678, map, ld);
 //			while (drone.hasNext()) {
 //	        	drone.goNextPosition();
 //			}

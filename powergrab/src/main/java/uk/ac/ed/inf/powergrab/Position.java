@@ -8,7 +8,7 @@ import com.mapbox.geojson.Point;
 * @version 0.2
 * @since   2019-09-24
 */
-public class Position {
+public class Position implements Geography {
 	public double latitude;		// The latitude of the position
 	public double longitude;	// The longitude of the position
 	
@@ -236,16 +236,18 @@ public class Position {
 		return nxtPos;
 	}
 	
-	public double angle(Position pos) {
-		double cos = (pos.latitude - latitude) / Math.sqrt(Math.pow(pos.latitude - latitude, 2) + Math.pow(pos.longitude - longitude, 2));
-		double acos = Math.acos(cos);
-		if (longitude > pos.longitude)
-			acos = - acos;
-		return acos;
-	}
-	
 	public boolean same(Position pos) {
 		if (pos.latitude == latitude && pos.longitude == longitude) return true;
 		else return false;
+	}
+
+	@Override
+	public double latitude() {
+		return latitude;
+	}
+
+	@Override
+	public double longitude() {
+		return longitude;
 	}
 }

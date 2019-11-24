@@ -18,7 +18,7 @@ public class Stateless extends Drone {
 		
 		while (iterator.hasNext()) {
 			position = myPosition.nextPosition(iterator.next());
-			if (!position.inPlayArea() || position.same(lastPosition)) {
+			if (!position.inPlayArea()) {
 				continue;
 			}
 			if (isPositivePosition(position)) {
@@ -41,5 +41,6 @@ public class Stateless extends Drone {
 		
 		return nextPosition;
 	}
+
 	
 }

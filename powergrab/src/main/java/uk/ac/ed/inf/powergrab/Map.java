@@ -33,16 +33,19 @@ public class Map {
 		fromFeatures(featureMap);
 	}
 	
-	public Map(int year, int mounth, int day) {
+	public Map(int year, int mounth, int day) throws IOException,  MalformedURLException{
 		String yearS = String.valueOf(year);
 		String mounthS = String.valueOf(mounth);
 		String dayS = String.valueOf(day);
-		if (day < 10) {
-			dayS = "0" + dayS;
-		}
+		
 		if (mounth < 10) {
 			mounthS = "0" + mounthS;
 		}
+		if (day < 10) {
+			dayS = "0" + dayS;
+		}
+
+		
         String mapString = "http://homepages.inf.ed.ac.uk/stg/powergrab/" +
         					yearS + "/" +
         					mounthS + "/" +
@@ -54,31 +57,23 @@ public class Map {
         try {
 			mapURL = new URL(mapString);
 		} catch (MalformedURLException e) {
-			e.printStackTrace();
-			System.err.println("Not a well-formed URL: " + e.getMessage());
-			return;
+			throw e;
 		}
 
-        
+        HttpURLConnection conn = (HttpURLConnection) mapURL.openConnection();
+		conn.setReadTimeout(10000);
+		conn.setConnectTimeout(15000); 
+		conn.setRequestMethod("GET");
+		conn.setDoInput(true);
+		
         try {
-        	HttpURLConnection conn = (HttpURLConnection) mapURL.openConnection();
-			conn.setReadTimeout(10000);
-			conn.setConnectTimeout(15000); 
-			conn.setRequestMethod("GET");
-			conn.setDoInput(true);
 			conn.connect();
-			InputStream buffer = conn.getInputStream();
-			mapSource = reader(buffer);
-//			in = new Scanner(buffer);
-//			mapSource = in.next();
 		} catch (IOException e) {
-			e.printStackTrace();
-			System.err.println("**********************************************************************");
-			System.err.println("Network problem occurred, can not download map: " + e.getMessage());
-			System.err.println("**********************************************************************");
-			return;
+			throw e;
 		}
         
+        InputStream buffer = conn.getInputStream();
+		mapSource = reader(buffer);
         FeatureCollection fc = FeatureCollection.fromJson(mapSource);
         fromFeatures(fc);
 
@@ -90,7 +85,7 @@ public class Map {
 		int index = -1;
 		for (int i = 0; i < 50; i ++) {
 			if (chargers.get(i).power > 0 && chargers.get(i).power > 0) {
-				curDistance = calDistance(pos, new Position(coordinates[i][0], coordinates[i][1]));
+				curDistance = pos.distance(new Position(coordinates[i][0], coordinates[i][1]));
 			} else continue;
 			if (curDistance < distance) {
 				distance = curDistance;
@@ -106,7 +101,7 @@ public class Map {
 		double curDistance = 0;
 		int index = 0;
 		for (int i = 0; i < 50; i ++) {
-			curDistance = calDistance(pos, new Position(coordinates[i][0], coordinates[i][1]));
+			curDistance = pos.distance(new Position(coordinates[i][0], coordinates[i][1]));
 			if (curDistance < distance) {
 				distance = curDistance;
 				index = i;
@@ -115,14 +110,9 @@ public class Map {
 		return chargers.get(index);
 	}
 	
-	double calDistance(Position pos1, Position pos2) {
-		double distance = Math.sqrt(Math.pow(pos1.latitude - pos2.latitude, 2) + Math.pow(pos1.longitude - pos2.longitude, 2));
-		return distance;
-	}
-	
 	public Charger connectedCharger(Position pos) {
 		Charger nearest = nearestCharger(pos);
-		double distance = calDistance(nearest.position, pos);
+		double distance = nearest.distance(pos);
 		if (distance <= 0.00025) return nearest;
 		else return null;
 	}

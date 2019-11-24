@@ -9,7 +9,7 @@ import java.util.Random;
  * @author Tai Yintao
  *
  */
-public abstract class Drone {
+public abstract class Drone implements Geography{
 	//TODO add method to output logs
 	Position myPosition;
 	int stepLeft = 250;
@@ -22,13 +22,11 @@ public abstract class Drone {
 	
 	Map map;
 	LineDrawer tracer;
-	Position lastPosition;
 	
 	public Drone(Position startPosition, long seed, Map map, LineDrawer tracer) {
 		this.map = map;
 		this.tracer = tracer;
 		myPosition = new Position(startPosition);
-		lastPosition = myPosition;
 		rand = new Random(seed);
 		updatePowerAndCoinsAndTrace();
 	}
@@ -49,7 +47,6 @@ public abstract class Drone {
 	
 	Position goNextPosition() {
 		Position nextPosition = findNextPosition();
-		lastPosition = myPosition;
 		myPosition = nextPosition;
 		stepLeft--;
 		power -= 1.25;
@@ -80,6 +77,16 @@ public abstract class Drone {
 		if (charger == null) return false;
 		if (charger.power > 0 && charger.coins > 0) return true;
 		else return false;
+	}
+	
+	@Override
+	public double latitude() {
+		return myPosition.latitude();
+	}
+
+	@Override
+	public double longitude() {
+		return myPosition.longitude();
 	}
 		
 }
