@@ -48,7 +48,7 @@ public class Statefull extends Stateless {
 		
 		for (int i = 0; i < 17; i++) {
 			nextPosition = myPosition.nextPosition(Direction.angleToDirection(angle));
-			if (!nextPosition.inPlayArea() || nextPosition.same(lastPosition)) {
+			if (!nextPosition.inPlayArea() || nextPosition.equals(lastPosition)) {
 				changeStrategy();
 				angle = bestAngle;
 				continue;

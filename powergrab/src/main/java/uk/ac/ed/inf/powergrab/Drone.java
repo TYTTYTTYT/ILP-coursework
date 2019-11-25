@@ -33,7 +33,6 @@ public abstract class Drone implements Geography{
 	
 	void updatePowerAndCoinsAndTrace() {
 		Charger charger = map.connectedCharger(myPosition);
-		tracer.addNextPoint(myPosition);
 		if (charger != null) {
 			coins += charger.coins;
 			power += charger.power;
@@ -41,8 +40,8 @@ public abstract class Drone implements Geography{
 			charger.power = 0;
 			if (coins < 0) coins = 0;
 			if (power < 0) power = 0;
-			
 		}
+		tracer.recordDrone(this);
 	}
 	
 	Position goNextPosition() {
