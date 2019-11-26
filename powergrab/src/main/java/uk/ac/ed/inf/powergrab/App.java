@@ -60,7 +60,7 @@ public class App
 			filename = "stateless" + "-" + d + "-" + m + "-" + y;
 		}
 		else if (args[6].equals("stateful")) {
-			drone = new Statefull(pos, seed, map, ld);
+			drone = new Stateful(pos, seed, map, ld);
 			filename = "stateful" + "-" + d + "-" + m + "-" + y;
 		}
 		else {
@@ -135,22 +135,21 @@ public class App
 
 //			Map map = null;
 //			try {
-//				map = new Map(2019, 10, 14);
+//				map = new Map(2019, 3, 16);
 //			} catch (IOException e) {
 //				System.err.println("Map initialize failed, please check the input date and network!");
 //				e.printStackTrace();
 //			}
 //			
 //			LineDrawer ld = new LineDrawer(map.rawFeatures);
-//			Stateless drone = new Statefull(new Position(55.944425, -3.188396), 5678, map, ld);
+//			Stateless drone = new Stateful(new Position(55.944425, -3.188396), 5678, map, ld);
 //			while (drone.hasNext()) {
 //	        	drone.goNextPosition();
 //			}
 //			
 //			System.out.println(ld.flightTrace());
 //			System.out.println(ld.mapWithLines().toJson());
-//			System.out.println(drone.coins);
-//			System.out.println(drone.stepLeft);
+//			System.out.println(drone.currentCoins());
 			
     }
     

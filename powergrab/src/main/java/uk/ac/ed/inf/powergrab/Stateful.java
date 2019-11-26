@@ -1,16 +1,16 @@
 package uk.ac.ed.inf.powergrab;
 // TODO add method to reset drone, so when drone have bad performance it can begin with different seed
-public class Statefull extends Stateless {
+public class Stateful extends Stateless {
 	
 	private String strategy = "clockwise";
 	private Position lastPosition;
 
-	public Statefull(Position startPosition, long seed, Map map, LineDrawer tracer) {
+	public Stateful(Position startPosition, long seed, Map map, LineDrawer tracer) {
 		super(startPosition, seed, map, tracer);
 		lastPosition = new Position(myPosition);
 		if (rand.nextBoolean()) {
 			strategy = "clockwise";
-		}else {
+		} else {
 			strategy = "anti-clockwise";
 		}
 	}
@@ -22,7 +22,7 @@ public class Statefull extends Stateless {
 			strategy = "clockwise";
 		}
 	}
-	
+
 	@Override
 	Position goNextPosition() {
 		Position pos = new Position(myPosition);
@@ -34,7 +34,7 @@ public class Statefull extends Stateless {
 	@Override
 	Position findNextPosition() {
 		Position statelessNext = super.findNextPosition();
-		if (isPositivePosition(statelessNext) || dangerous(statelessNext)) return statelessNext;
+		if (isPositive(statelessNext) || dangerous(statelessNext)) return statelessNext;
 		
 		Charger nextPositive = map.nearestPositiveCharger(myPosition);
 		Position nextPosition;

@@ -15,8 +15,8 @@ import com.mapbox.geojson.Point;
 
 public class Map {
 	private double[][] coordinates;
-	double totalPositiveCoins;
-	double totalPositivePower;
+	private double totalPositiveCoins;
+	private double totalPositivePower;
 	
 	private List<Charger> chargers;
 	FeatureCollection rawFeatures;
@@ -113,23 +113,22 @@ public class Map {
 	public Charger connectedCharger(Position pos) {
 		Charger nearest = nearestCharger(pos);
 		double distance = nearest.distance(pos);
-		if (distance <= 0.00025) return nearest;
+		if (distance <= 0.00025d) return nearest;
 		else return null;
 	}
 	
-    private static String reader(InputStream in) {
+    private static String reader(InputStream in) throws IOException {
     	byte current;
     	String result = new String();
-    	while(true) {
-    		try {
+    	try {
+	    	while(true) {
 				current = (byte) in.read();
-			} catch (IOException e) {
-				e.printStackTrace();
-				return result;
-			}
-    		if (current == -1) return result;
-    		result += (char) current;
-    	}
+	    		if (current == -1) return result;
+	    		result += (char) current;
+	    	}
+	    } catch (IOException e) {
+			throw e;
+		}
     }
     
     private void fromFeatures(FeatureCollection featureMap) {

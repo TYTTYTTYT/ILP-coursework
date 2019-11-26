@@ -1,6 +1,5 @@
 /afs/inf.ed.ac.uk/user/s18/s1891075/ILP-coursework/ILP-coursework/powergrab/src/main/java/uk/ac/ed/inf/powergrab/Drone.java
 /afs/inf.ed.ac.uk/user/s18/s1891075/ILP-coursework/ILP-coursework/powergrab/src/main/java/uk/ac/ed/inf/powergrab/LineDrawer.java
-/afs/inf.ed.ac.uk/user/s18/s1891075/ILP-coursework/ILP-coursework/powergrab/src/main/java/uk/ac/ed/inf/powergrab/Statefull.java
 /afs/inf.ed.ac.uk/user/s18/s1891075/ILP-coursework/ILP-coursework/powergrab/src/main/java/uk/ac/ed/inf/powergrab/Stateless.java
 /afs/inf.ed.ac.uk/user/s18/s1891075/ILP-coursework/ILP-coursework/powergrab/src/main/java/uk/ac/ed/inf/powergrab/App.java
 /afs/inf.ed.ac.uk/user/s18/s1891075/ILP-coursework/ILP-coursework/powergrab/src/main/java/uk/ac/ed/inf/powergrab/Position.java
@@ -8,3 +7,4 @@
 /afs/inf.ed.ac.uk/user/s18/s1891075/ILP-coursework/ILP-coursework/powergrab/src/main/java/uk/ac/ed/inf/powergrab/Charger.java
 /afs/inf.ed.ac.uk/user/s18/s1891075/ILP-coursework/ILP-coursework/powergrab/src/main/java/uk/ac/ed/inf/powergrab/Geography.java
 /afs/inf.ed.ac.uk/user/s18/s1891075/ILP-coursework/ILP-coursework/powergrab/src/main/java/uk/ac/ed/inf/powergrab/Direction.java
+/afs/inf.ed.ac.uk/user/s18/s1891075/ILP-coursework/ILP-coursework/powergrab/src/main/java/uk/ac/ed/inf/powergrab/Stateful.java

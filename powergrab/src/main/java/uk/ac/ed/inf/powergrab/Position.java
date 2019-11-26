@@ -5,7 +5,7 @@ import com.mapbox.geojson.Point;
 * The Position class used to indicate position on GeoMaps.
 *
 * @author  Tai Yintao
-* @version 0.2
+* @version 1.0
 * @since   2019-09-24
 */
 public class Position implements Geography {
@@ -40,7 +40,7 @@ public class Position implements Geography {
 	   * This constructor is used to initiate Position instance with provided Geojson
 	   * Point instance.
 	   * 
-	   * @param a Geojson Point instance stores latitude and longitude
+	   * @param point a Geojson Point instance stores latitude and longitude
 	   */
 	public Position(Point point) {
 		this.latitude = point.latitude();
@@ -227,6 +227,7 @@ public class Position implements Geography {
 	   * Change the current coordinate of this instance to one of 16 directions
 	   * 
 	   * @param direction  The direction of where to go
+	   * @return the position after move
 	   */
 	public Position go(Direction direction) {
 		// Use nextPosition method to calculate the new coordinate。

@@ -21,7 +21,7 @@ public class Stateless extends Drone {
 			if (!position.inPlayArea()) {
 				continue;
 			}
-			if (isPositivePosition(position)) {
+			if (isPositive(position)) {
 				return position;
 			}
 			if (!dangerous(position)) {
