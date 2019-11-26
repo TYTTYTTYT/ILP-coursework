@@ -1,6 +1,7 @@
 package uk.ac.ed.inf.powergrab;
 
 import com.mapbox.geojson.Point;
+
 /**
 * The Position class used to indicate position on GeoMaps.
 *
