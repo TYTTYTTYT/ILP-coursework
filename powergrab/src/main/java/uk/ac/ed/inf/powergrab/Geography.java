@@ -45,6 +45,24 @@ interface Geography {
 	}
 	
 	/**
+	 * Calculate the distance to a position with given latitude and longitude
+	 * <p>
+	 * The distance is the Pythagorean distance calculated from latitude and longitude.
+	 * It's an approximated distance, assuming the earth as a plane and latitude and longitude
+	 * are equally distributed.
+	 *
+	 * @param latitude the given latitude
+	 * @param longitude the given longitude
+	 * @return the distance.
+	 */
+	default double distance(double latitude, double longitude) {
+		// Calculate the Pythagorean distance, regards latitude and longitude as two coordinates.
+		double distance = Math.sqrt(Math.pow(this.latitude() - latitude, 2) + 
+						Math.pow(this.longitude() - longitude, 2));
+		return distance;
+	}
+	
+	/**
 	 * Calculate the angle to another geographic object.
 	 * <p>
 	 * The angle from North to some compass point in clockwise direction,

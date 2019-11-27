@@ -3,11 +3,17 @@ package uk.ac.ed.inf.powergrab;
 import com.mapbox.geojson.Point;
 
 /**
-* The Position class used to indicate position on GeoMaps.
+* The Position class used to indicate a geographic position,
+* and provides position related methods.
+* <p>
+* A object of Position class is a basic geographic element,
+* which implemented Geography interface.
+* Also provides function to calculate the next position in a specific direction,
+* and to judge whether this position is in play area.  
 *
 * @author  Tai Yintao
 * @version 1.0
-* @since   2019-09-24
+* @since   0.0
 */
 public class Position implements Geography {
 	public double latitude;		// The latitude of the position
@@ -18,7 +24,7 @@ public class Position implements Geography {
 	static private double westLimit;
 	static private double eastLimit;
 	
-	// Static initialization block, used to initialize default playarea.
+	// Static initialization block, initialize the default play area.
 	static {
 		northLimit = 55.946233d;
 		southLimit = 55.942617d;
@@ -72,7 +78,20 @@ public class Position implements Geography {
 	/* This static class calculate movement length of all directions first, used to calculate
 	 * next position.
 	 */
-	static class Movement{
+	/**
+	* A private inner class of Position class, stores data used to calculate next position in a direction.
+	* <p>
+	* Latitude and longitude increment of moving in each direction.
+	* Increments are stored in arrays.
+	* For each direction,
+	* the first number is latitude increment and the second is longitude increment.
+	* All the increments will only be calculated once then they will be stored in this static class.
+	*
+	* @author  Tai Yintao s1891075@ed.ac.uk
+	* @version 1.0
+	* @since   0.0
+	*/
+	private static class Movement{
 		static private double[] N = {0.0003d, 0d};
 		static private double[] NNE = {Math.sin(3.0d / 8 * Math.PI) * 0.0003d, Math.cos(3.0d / 8 * Math.PI) * 0.0003d};
 		static private double[] NE = {Math.sin(2.0d / 8 * Math.PI) * 0.0003d, Math.cos(2.0d / 8 * Math.PI) * 0.0003d};
@@ -222,20 +241,6 @@ public class Position implements Geography {
 			return false;
 		}
 		return true;
-	}
-	
-	/**
-	   * Change the current coordinate of this instance to one of 16 directions
-	   * 
-	   * @param direction  The direction of where to go
-	   * @return the position after move
-	   */
-	public Position go(Direction direction) {
-		// Use nextPosition method to calculate the new coordinate。
-		Position nxtPos = nextPosition(direction);
-		latitude = nxtPos.latitude;
-		longitude = nxtPos.longitude;
-		return nxtPos;
 	}
 	
 	@Override

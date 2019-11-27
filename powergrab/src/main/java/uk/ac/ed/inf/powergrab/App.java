@@ -4,27 +4,31 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 /**
- * Hello world!
+ * Main procedure of the game application.
  *
  */
 public class App 
 {
     public static void main(String[] args) {
-    	System.out.println(args[6]);
-    	int year, mounth, day;
-    	long seed;
-    	double latitude, longitude;
-    	Stateless drone;
-    	Position pos;
+    	// Check the argument format
+    	if (args.length != 7) {
+    		System.err.println("########################");
+    		System.err.println("Wrong argument format!!!");
+    		System.err.println("########################");
+    		return;
+    	}
     	
-    	day = Integer.valueOf(args[0]);
-    	mounth = Integer.valueOf(args[1]);
-    	year = Integer.valueOf(args[2]);
+    	// Read game parameters
+    	int day = Integer.valueOf(args[0]);
+    	int mounth = Integer.valueOf(args[1]);
+    	int year = Integer.valueOf(args[2]);
     	
-    	latitude = Double.valueOf(args[3]);
-    	longitude = Double.valueOf(args[4]);
-    	pos = new Position(latitude, longitude);
+    	double latitude = Double.valueOf(args[3]);
+    	double longitude = Double.valueOf(args[4]);
+    	Position pos = new Position(latitude, longitude);
+    	long seed = Integer.valueOf(args[5]);
     	
+    	// The drone must be initizlized within the play area
     	if (!pos.inPlayArea()) {
     		System.err.println("#######################################");
     		System.err.println("Initial position is out of play area!!!");
@@ -32,7 +36,7 @@ public class App
     		return;
     	}
     	
-    	seed = Integer.valueOf(args[5]);
+    	// Download and generate the game map
 		Map map = null;
 		try {
 			map = new Map(year, mounth, day);
@@ -43,8 +47,10 @@ public class App
 			e.printStackTrace();
 		}
     	
+		// Generate the file name to store the drone records.
 		String filename;
 		String y, m, d;
+		Drone drone;
 		y = String.valueOf(year);
 		if (mounth < 10)
 			m = "0" + String.valueOf(mounth);
@@ -53,7 +59,7 @@ public class App
 			d = "0" + String.valueOf(day);
 		else d = String.valueOf(day);
 		
-		
+		// Initialize the drone and the tracer (LineDrawer) according to the input drone type
 		LineDrawer ld = new LineDrawer(map.rawFeatures);
 		if (args[6].equals("stateless")) {
 			drone = new Stateless(pos, seed, map, ld);
@@ -62,100 +68,36 @@ public class App
 		else if (args[6].equals("stateful")) {
 			drone = new Stateful(pos, seed, map, ld);
 			filename = "stateful" + "-" + d + "-" + m + "-" + y;
-		}
-		else {
+		} else {
 			System.err.println("#####################################################");
 			System.err.println("Please enter a valid drone type! stateless / stateful");
 			System.err.println("#####################################################");
 			return;
 		};
 		
+		// Run the drone
 		while (drone.hasNext()) {
         	drone.goNextPosition();
         }
 		
+		// Store the drone records to files.
 		String json = ld.mapWithLines().toJson();
 		String records = ld.flightTrace();
-		
 		try{    
 			FileWriter fw = new FileWriter(filename + ".geojson");    
 			fw.write(json);    
-			fw.close();    
-		}catch(Exception e){
-			e.printStackTrace();
-			return;
-		}
-		try{    
-			FileWriter fw = new FileWriter(filename + ".txt");    
+			fw.close();
+			fw = new FileWriter(filename + ".txt");    
 			fw.write(records);    
-			fw.close();    
+			fw.close();  
 		}catch(Exception e){
+			System.err.println("#####################");
+			System.err.println("Saving file failed!!!");
+			System.err.println("#####################");
 			e.printStackTrace();
 			return;
 		}
+
 		System.out.println("Success...");  
-
-//	    int allMaps = 0;
-//	    int clearMaps = 0;
-//	    for (int y = 2019; y <= 2020; y++) {
-//	    	for (int m = 1; m <= 12; m++) {
-//	        	for (int d = 1; d <= 31; d++) {
-//	    			Map map = null;
-//	    			try {
-//	    				map = new Map(y, m, d);
-//	    			} catch (IOException e) {
-//	    				System.err.println("############################################################");
-//	    				System.err.println("Map initialization failed, please check the date or network!");
-//	    				System.err.println("############################################################");
-//	    				e.printStackTrace();
-//	    				continue;
-//	    			}
-//	    			
-//	        		allMaps++;
-//	        		LineDrawer ld = new LineDrawer(map.rawFeatures);
-//	       			Stateless drone = new Statefull(new Position(55.944425, -3.188396), 333, map, ld);
-//	       			while (drone.hasNext()) {
-//	       	        	drone.goNextPosition();
-//	       	        }
-//	       			if (map.noCoinsLeft()) clearMaps++;
-//	       			else {
-//	       				System.out.println("map " + String.valueOf(y) + " " + String.valueOf(m) + " " + String.valueOf(d));
-//	       				System.out.println(String.valueOf(drone.stepLeft) + " steps left");
-//	       			}
-//	       			if (!approxEq(map.totalPositiveCoins, drone.coins)) {
-//	       				System.out.println("map " + String.valueOf(y) + " " + String.valueOf(m) + " " + String.valueOf(d));
-//	       				System.out.println(String.valueOf(map.totalPositiveCoins) + " in total, " + String.valueOf(drone.coins) + " got.");
-//	       			}
-//	       	  	}
-//	    	}
-//	    }
-//	    System.out.println("all maps: " + String.valueOf(allMaps));
-//	    System.out.println("cleared maps: " + String.valueOf(clearMaps));
-
-
-//			Map map = null;
-//			try {
-//				map = new Map(2019, 3, 16);
-//			} catch (IOException e) {
-//				System.err.println("Map initialize failed, please check the input date and network!");
-//				e.printStackTrace();
-//			}
-//			
-//			LineDrawer ld = new LineDrawer(map.rawFeatures);
-//			Stateless drone = new Stateful(new Position(55.944425, -3.188396), 5678, map, ld);
-//			while (drone.hasNext()) {
-//	        	drone.goNextPosition();
-//			}
-//			
-//			System.out.println(ld.flightTrace());
-//			System.out.println(ld.mapWithLines().toJson());
-//			System.out.println(drone.currentCoins());
-			
-    }
-    
-	static boolean approxEq(double d0, double d1) {
-		final double epsilon = 1.0E-10d;
-		return Math.abs(d0 - d1) < epsilon;
-	}
-    
+    }    
 }

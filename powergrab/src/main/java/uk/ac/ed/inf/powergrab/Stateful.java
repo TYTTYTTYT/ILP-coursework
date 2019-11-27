@@ -3,7 +3,7 @@ package uk.ac.ed.inf.powergrab;
 /**
  * The statefull drone class,
  * extends the stateless drone, 
- * and defines strategy of the stateless drone. 
+ * and defines strategy of the stateful drone. 
  * <p>
  * The stateful drone adapts a greedy strategy.
  * It always try to get the nearest positive charger.
@@ -92,7 +92,7 @@ public class Stateful extends Stateless {
 	 */
 	@Override
 	Position findNextPosition() {
-		// In the cases of no safe way to go or only one step can connect a positive charger,
+		// In the cases of no safe way to go or only one step to connect a positive charger,
 		// using the stateless strategy.
 		Position statelessNext = super.findNextPosition();
 		if (isPositive(statelessNext) || dangerous(statelessNext)) return statelessNext;

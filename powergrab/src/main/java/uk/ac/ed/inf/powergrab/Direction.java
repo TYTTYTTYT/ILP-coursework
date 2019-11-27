@@ -20,7 +20,7 @@ import java.util.Random;
 * @since   0.0
 */
 public enum Direction {
-	// 16 directions
+	// 16 major compass directions
 	/**
 	 * N direction
 	 */

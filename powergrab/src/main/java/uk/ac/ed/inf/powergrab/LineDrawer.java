@@ -99,7 +99,9 @@ public class LineDrawer {
 	 * Write the drone movement records to a string.
 	 * <p>
 	 * Each line in the string represents one record/move of the drone, in the format of
-	 * <latitude before move>,<longitude before move>,<direction of this move>,<latitude after move>,<longitude after move>,<coins after move>,<power after move>
+	 * <p>
+	 * {@literal <latitude before move>,<longitude before move>,<direction of this move>,
+	 * <latitude after move>,<longitude after move>,<coins after move>,<power after move>}
 	 * 
 	 * @return the movement records.
 	 */
