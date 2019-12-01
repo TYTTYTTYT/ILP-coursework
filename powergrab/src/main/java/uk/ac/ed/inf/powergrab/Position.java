@@ -253,8 +253,8 @@ public class Position implements Geography {
         /* Check if o is an instance of Complex or not 
           "null instanceof [type]" also returns false */
         if (!(o instanceof Position)) { 
-            return false; 
-        } 
+            return false;
+        }
 		Position pos = (Position) o;
 		if (pos.latitude == latitude && pos.longitude == longitude) return true;
 		else return false;
