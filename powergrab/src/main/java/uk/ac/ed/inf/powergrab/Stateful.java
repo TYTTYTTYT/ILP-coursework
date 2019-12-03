@@ -13,7 +13,7 @@ package uk.ac.ed.inf.powergrab;
  * it will try another direction. 
  *  
  * @author      Tai Yintao s1891075@ed.ac.uk
- * @version     1.4
+ * @version     1.5
  * @since       0.3
  */
 public class Stateful extends Stateless {
@@ -27,6 +27,11 @@ public class Stateful extends Stateless {
 	 * the last position of this drone
 	 */
 	private Position lastPosition;
+	
+	/**
+	 * number of steps not meet a positive charger
+	 */
+	private int stepsNoCoins;
 
 	/**
 	 * Constructs a stateful drone with given position, seed, map and tracer.
@@ -39,6 +44,7 @@ public class Stateful extends Stateless {
 	public Stateful(Position startPosition, long seed, Map map, LineDrawer tracer) {
 		super(startPosition, seed, map, tracer);
 		lastPosition = new Position(myPosition);
+		stepsNoCoins = 0;
 		// Randomly choose the initial bypassing strategy
 		if (rand.nextBoolean()) {
 			strategy = "clockwise";
@@ -92,11 +98,6 @@ public class Stateful extends Stateless {
 	 */
 	@Override
 	Position findNextPosition() {
-		// In the cases of no safe way to go or only one step to connect a positive charger,
-		// using the stateless strategy.
-		Position statelessNext = super.findNextPosition();
-		if (isPositive(statelessNext) || dangerous(statelessNext)) return statelessNext;
-		
 		// Find the nearest positive charger
 		Charger nextPositive = map.nearestPositiveCharger(myPosition);
 		Position nextPosition;
@@ -105,7 +106,17 @@ public class Stateful extends Stateless {
 		if (nextPositive == null) {
 			return lastPosition;
 		}
-		
+		// In the cases of no safe way to go or only one step to connect a positive charger,
+		// using the stateless strategy.
+		Position statelessNext = super.findNextPosition();
+		// Previous 25 steps not meet charger, randomly run 10 steps.
+		if (stepsNoCoins > 25) stepsNoCoins = -10;
+		if (isPositive(statelessNext) || dangerous(statelessNext)) {
+			stepsNoCoins = 0;
+			return statelessNext;
+		} else stepsNoCoins++;
+		while (stepsNoCoins < 0) return statelessNext;
+
 		// Calculate the angle to the nearest positive charger.
 		double bestAngle = myPosition.angle(nextPositive);
 		double angle = bestAngle;

@@ -8,19 +8,19 @@ package uk.ac.ed.inf.powergrab;
  * the location of it will not change.
  *  
  * @author      Tai Yintao s1891075@ed.ac.uk
- * @version     1.0
+ * @version     1.1
  * @since       0.3
  */
 public class Charger implements Geography {
 	/**
 	 * Coins of this charger.
 	 */
-	double coins;
+	float coins;
 	
 	/**
 	 * Power of this charger.
 	 */
-	double power;
+	float power;
 	
 	/**
 	 * the position of this charger.
@@ -39,7 +39,7 @@ public class Charger implements Geography {
 	 * @param coins the initial coins of the new charger
 	 * @param power the initial power of the new charger
 	 */
-	public Charger(double latitude, double longitude, double coins, double power) {
+	public Charger(double latitude, double longitude, float coins, float power) {
 		this.coins = coins;
 		this.power = power;
 		this.myPosition = new Position(latitude, longitude);

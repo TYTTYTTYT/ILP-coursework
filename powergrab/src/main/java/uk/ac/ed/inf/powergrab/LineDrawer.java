@@ -8,7 +8,7 @@ import com.mapbox.geojson.FeatureCollection;
  * Provides methods to record the drone and add the trace to map FeatureCollection 
  *
  * @author      Tai Yintao s1891075@ed.ac.uk
- * @version     1.0
+ * @version     1.1
  * @since       0.1
  */
 public class LineDrawer {
@@ -26,12 +26,12 @@ public class LineDrawer {
 	/**
 	 * Coins records.
 	 */
-	private double[] coinsTrace;
+	private float[] coinsTrace;
 	
 	/**
 	 * Power records.
 	 */
-	private double[] powerTrace;
+	private float[] powerTrace;
 	
 	/**
 	 * Map features.
@@ -56,8 +56,8 @@ public class LineDrawer {
 	{
 		latitudeTrace = new double[500];
 		longitudeTrace = new double[500];
-		coinsTrace = new double[500];
-		powerTrace = new double[500];
+		coinsTrace = new float[500];
+		powerTrace = new float[500];
 		tracePointer = 0;
 	}
 	
@@ -118,8 +118,8 @@ public class LineDrawer {
 					String.valueOf(d) + "," +
 					Double.toString(latitudeTrace[stepFinished]) + "," +
 					Double.toString(longitudeTrace[stepFinished]) + "," +
-					Double.toString(coinsTrace[stepFinished]) + "," +
-					Double.toString(powerTrace[stepFinished]) + "\n";	// Change line after each record
+					Float.toString(coinsTrace[stepFinished]) + "," +
+					Float.toString(powerTrace[stepFinished]) + "\n";	// Change line after each record
 		}
 		return records;
 	}

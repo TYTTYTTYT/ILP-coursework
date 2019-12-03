@@ -35,12 +35,12 @@ public abstract class Drone implements Geography{
 	/**
 	 * Coins of this drone.
 	 */
-	private double coins;
+	private float coins;
 	
 	/**
 	 * Power of this drone.
 	 */
-	private double power;
+	private float power;
 	
 	/**
 	 * The game map the drone is flying within.
@@ -54,9 +54,9 @@ public abstract class Drone implements Geography{
 	
 	{
 		// The drone carries no coins at beginning.
-		coins = 0;
+		coins = 0f;
 		// Initial power is 250.
-		power = 250;
+		power = 250f;
 		// The drone can only fly 250 steps in total.
 		stepLeft = 250;
 	}
@@ -120,7 +120,7 @@ public abstract class Drone implements Geography{
 		myPosition = nextPosition;
 		// Reduce remaining steps and power
 		stepLeft--;
-		power -= 1.25;
+		power -= 1.25f;
 		// The drone may connected to a charger, check this after each move. 
 		updatePowerAndCoinsAndTrace();
 		return nextPosition;
@@ -216,7 +216,7 @@ public abstract class Drone implements Geography{
 	 *
 	 * @return the coins.
 	 */
-	public double currentCoins() {
+	public float currentCoins() {
 		return coins;
 	}
 	
@@ -225,7 +225,7 @@ public abstract class Drone implements Geography{
 	 *
 	 * @return the power.
 	 */
-	public double currentPower() {
+	public float currentPower() {
 		return power;
 	}
 }

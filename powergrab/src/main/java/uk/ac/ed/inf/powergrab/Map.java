@@ -192,8 +192,8 @@ public class Map {
 	   * @param featureMap a GeoJson FeatureCollection with 50 charger information
 	   */
     private void fromFeatures(FeatureCollection featureMap) {
-    	double coins;
-    	double power;
+    	float coins;
+    	float power;
     	rawFeatures = featureMap;
 		List<Feature> features = featureMap.features();
 		Feature currentFeature = null;
@@ -204,8 +204,8 @@ public class Map {
 			currentPoint = (Point) currentFeature.geometry();
 			coordinates[i][0] = currentPoint.latitude();
 			coordinates[i][1] = currentPoint.longitude();
-			coins = currentFeature.getProperty("coins").getAsDouble();
-			power = currentFeature.getProperty("power").getAsDouble();
+			coins = currentFeature.getProperty("coins").getAsFloat();
+			power = currentFeature.getProperty("power").getAsFloat();
 			
 			chargers.add(new Charger(currentPoint.latitude(), currentPoint.longitude(), coins, power));
 		}
