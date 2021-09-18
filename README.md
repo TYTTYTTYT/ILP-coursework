@@ -1,4 +1,4 @@
-# Informatics Large Practice
+# Informatics Large Practical
 
 JAVA-based game from the Informatics Large Practical.
 
@@ -6,5 +6,5 @@ JAVA-based game from the Informatics Large Practical.
 * Used Geo-JSON to represent game map, so the game map is based on real world geographic information.
 
 
-#### For details of this porject, please view the following report:
+**For details of this porject, please view this report:**
 #### [ilp-report.pdf](https://github.com/TYTTYTTYT/ILP-coursework/blob/master/ilp-report.pdf)
